@@ -14,7 +14,7 @@ load_dotenv(find_dotenv())
 updater = Updater(token=os.getenv('BOT_TOKEN', 'suatu-token')) # dummy bot
 dispatcher = updater.dispatcher
 
-# locale.setlocale(locale.LC_ALL, 'id_ID')
+locale.setlocale(locale.LC_ALL, 'id_ID')
 
 
 def help(bot, update):
