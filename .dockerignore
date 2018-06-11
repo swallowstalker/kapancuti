@@ -3,3 +3,4 @@
 /venv
 /.idea
 /compose.yml
+/__pycache__

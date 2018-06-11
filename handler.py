@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta
-from telegram import ParseMode
 from pymongo import MongoClient
 import os
 from bson.codec_options import CodecOptions
@@ -15,6 +14,7 @@ class ResponseHandler:
         db = MongoClient(host=os.getenv('MONGO_HOST', "localhost"),
                          port=int(os.getenv('MONGO_PORT', 27017))).get_database("kapancuti")
         self.holidays_collection = db.get_collection('holidays', codec_options=CodecOptions(tz_aware=True))
+        print(self.holidays_collection.count())
 
     def year(self):
         current_year = datetime.now().year
@@ -94,16 +94,17 @@ class ResponseHandler:
             message += templater.holiday_only_templating(holiday, header_active)
 
         message += '\nUntuk melihat rekomendasi cuti, silakan panggil /recommendation\n'
+        return message
 
     def help(self):
         return """
-        Untuk menjaga keseimbangan kerja dan liburan, bot ini dibuat sebagai referensi untuk pengambilan cuti anda. 
-        Ada 3 command, yaitu: 
+Untuk menjaga keseimbangan kerja dan liburan, bot ini dibuat sebagai referensi untuk pengambilan cuti anda. 
+Ada 3 command, yaitu: 
 
-        /year [tahun] 
-        /incoming 
-        /recommendation
+/year [tahun] 
+/incoming 
+/recommendation
 
-        Silakan dicoba.
-        Kritik dan saran silakan hubungi @swallowstalker ya.
-        """
+Silakan dicoba.
+Kritik dan saran silakan hubungi @swallowstalker ya.
+"""

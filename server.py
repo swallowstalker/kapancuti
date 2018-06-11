@@ -2,14 +2,11 @@ from telegram.ext import Updater, CommandHandler
 from telegram import ParseMode
 from pymongo import MongoClient
 from bson.codec_options import CodecOptions
-from datetime import datetime, timedelta
 from dateutil import tz
-from babel.dates import format_timedelta
 import locale
 import os
 from dotenv import load_dotenv, find_dotenv
 import handler
-import templater
 
 load_dotenv(find_dotenv())
 
@@ -18,35 +15,6 @@ dispatcher = updater.dispatcher
 
 locale.setlocale(locale.LC_ALL, 'id_ID')
 
-
-def help(bot, update):
-    guide_message = """
-Untuk menjaga keseimbangan kerja dan liburan, bot ini dibuat sebagai referensi untuk pengambilan cuti anda. 
-Ada 3 command, yaitu: 
-
-/year [tahun] 
-/incoming 
-/recommendation
-
-Silakan dicoba.
-Kritik dan saran silakan hubungi @swallowstalker ya.
-    """
-
-    bot.send_message(chat_id=update.message.chat_id, text=guide_message)
-
-
-start_handler = CommandHandler('start', help)
-dispatcher.add_handler(start_handler)
-
-help_handler = CommandHandler('help', help)
-dispatcher.add_handler(help_handler)
-
-
-JAKARTA_TIMEZONE = tz.gettz('Asia/Jakarta')
-
-db = MongoClient(host=os.getenv('MONGO_HOST', "localhost"), port=int(os.getenv('MONGO_PORT', 27017))).get_database("kapancuti")
-holidays_collection = db.get_collection('holidays', codec_options=CodecOptions(tz_aware=True))
-print(holidays_collection.count())
 
 response_handler = handler.ResponseHandler()
 
@@ -69,6 +37,12 @@ def recommendation(bot, update):
     track(update, bot, "recommendation")
 
 
+def help(bot, update):
+    guide_message = response_handler.help()
+    bot.send_message(chat_id=update.message.chat_id, text=guide_message)
+    track(update, bot, "help")
+
+
 def track(update, bot, command):
     admin_chat_id = os.getenv('ADMIN_CHAT_ID', "")
     user = update.message.from_user
@@ -85,6 +59,12 @@ dispatcher.add_handler(incoming_handler)
 
 recommendation_handler = CommandHandler('recommendation', recommendation)
 dispatcher.add_handler(recommendation_handler)
+
+start_handler = CommandHandler('start', help)
+dispatcher.add_handler(start_handler)
+
+help_handler = CommandHandler('help', help)
+dispatcher.add_handler(help_handler)
 
 
 if __name__ == "__main__":
