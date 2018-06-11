@@ -7,11 +7,9 @@ from dateutil import tz
 from babel.dates import format_timedelta
 import locale
 import os
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 
-load_dotenv(override=True)
-
-print(os.getenv('BOT_TOKEN'))
+load_dotenv(find_dotenv())
 
 updater = Updater(token=os.getenv('BOT_TOKEN', 'suatu-token')) # dummy bot
 dispatcher = updater.dispatcher
@@ -75,6 +73,15 @@ def year(bot, update):
         message += holiday_only_templating(holiday, header_active)
     
     bot.send_message(update.message.chat_id, text=message, parse_mode=ParseMode.HTML)
+    track(update, bot, "year")
+
+
+def track(update, bot, command):
+    admin_chat_id = os.getenv('ADMIN_CHAT_ID', "")
+    user = update.message.from_user
+    if admin_chat_id != "":
+        bot.send_message(admin_chat_id, text="Called by {full_name} ({username}), command: {command}".format_map(
+            {'username': user.username, 'full_name': user.full_name, 'command': command}))
 
 
 def estimate(target_datetime=datetime.now(tz=JAKARTA_TIMEZONE)):
@@ -175,6 +182,7 @@ def incoming(bot, update):
     message += '\nUntuk melihat rekomendasi cuti, silakan panggil /recommendation\n'
 
     bot.send_message(update.message.chat_id, text=message, parse_mode=ParseMode.HTML)
+    track(update, bot, "incoming")
 
 
 def recommendation(bot, update):
@@ -203,6 +211,7 @@ def recommendation(bot, update):
         message += recommendation_templating(holiday, header_active)
 
     bot.send_message(update.message.chat_id, text=message, parse_mode=ParseMode.HTML)
+    track(update, bot, "recommendation")
 
 
 year_handler = CommandHandler('year', year)
