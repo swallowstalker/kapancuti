@@ -10,4 +10,5 @@ build:
 	docker build -t $(IMAGE) -f Dockerfile .
 
 push:
+	docker tag $(IMAGE) swallowstalker/$(IMAGE)
 	docker push swallowstalker/$(IMAGE)
