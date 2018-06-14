@@ -16,17 +16,18 @@ class ResponseHandler:
         self.holidays_collection = db.get_collection('holidays', codec_options=CodecOptions(tz_aware=True))
         print(self.holidays_collection.count())
 
-    def year(self):
-        current_year = datetime.now().year
+    def year(self, year=None):
+
+        year = datetime.now().year if year is None else int(year)
 
         yearly_holidays = self.holidays_collection.find({
             'foremost_date': {
-                '$gte': datetime(current_year, 1, 1, tzinfo=JAKARTA_TIMEZONE),
-                '$lt': datetime(current_year + 1, 1, 1, tzinfo=JAKARTA_TIMEZONE)
+                '$gte': datetime(year, 1, 1, tzinfo=JAKARTA_TIMEZONE),
+                '$lt': datetime(year + 1, 1, 1, tzinfo=JAKARTA_TIMEZONE)
             }
         })
 
-        message = "Berikut adalah hari libur untuk tahun {year}\n".format_map({'year': current_year})
+        message = "Berikut adalah hari libur untuk tahun {year}\n".format_map({'year': year})
 
         current_month = -1
         for holiday in yearly_holidays:
