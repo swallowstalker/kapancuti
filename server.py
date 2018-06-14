@@ -1,8 +1,5 @@
 from telegram.ext import Updater, CommandHandler
 from telegram import ParseMode
-from pymongo import MongoClient
-from bson.codec_options import CodecOptions
-from dateutil import tz
 import locale
 import os
 from dotenv import load_dotenv, find_dotenv
@@ -19,8 +16,11 @@ locale.setlocale(locale.LC_ALL, 'id_ID')
 response_handler = handler.ResponseHandler()
 
 
-def year(bot, update):
-    message = response_handler.year()
+def year(bot, update, args):
+
+    year = args[0] if len(args) > 0 else None
+    message = response_handler.year(year)
+
     bot.send_message(update.message.chat_id, text=message, parse_mode=ParseMode.HTML)
     track(update, bot, "year")
 
@@ -51,7 +51,7 @@ def track(update, bot, command):
             {'username': user.username, 'full_name': user.full_name, 'command': command}))
 
 
-year_handler = CommandHandler('year', year)
+year_handler = CommandHandler('year', year, pass_args=True)
 dispatcher.add_handler(year_handler)
 
 incoming_handler = CommandHandler('incoming', incoming)
