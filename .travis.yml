@@ -9,7 +9,7 @@ deploy:
   provider: script
   script: make push
   on:
-    branch: add-travis
+    branch: master
 env:
   global:
   - DOCKER_USERNAME=swallowstalker
