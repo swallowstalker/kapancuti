@@ -3,10 +3,11 @@ import json
 from datetime import datetime
 import os.path
 from dateutil import tz
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 import argparse
 
-load_dotenv(override=True)
+
+load_dotenv(find_dotenv())
 
 # init db to mongo
 db = MongoClient(host=os.getenv('MONGO_HOST', "localhost"), port=int(os.getenv('MONGO_PORT', 27017))).get_database("kapancuti")

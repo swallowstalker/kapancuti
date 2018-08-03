@@ -1,0 +1,17 @@
+language: python
+python: '3.6'
+sudo: required
+services:
+  - docker
+script:
+  - make build
+deploy:
+  provider: script
+  script: make push
+  on:
+    branch: master
+env:
+  global:
+  - DOCKER_USERNAME=swallowstalker
+  matrix:
+  - secure: PVi61MWo74B0Q1rvt7xQa1lyepdm2WvdxGJJHBHu95X9DMymCl6OLM0u/UkXFD8yRtmCw5LQkOEQdCCgpN4h0lV1LKwn0iL4P9tggPOF1+dXTSFBZhI3XClIIf4Cabc0U0PWq+2Pppqc8CkvQAIl5IxKTNCF9AETKrH3I4LTriam/sgfnplztf8O+NsD/4NRIA/LoM7ZmgpIeHAu3ojCCLwV63zzZ+PoLfYTkjkNDJt8UBM1GXcqWun9vqCTctqbl+7YfTddS9kWV0POKltppJYpBovifWZWmgBU6Ng8zf4nX5fG440uQpdg27FDXo/3vXt6MsQl7FMHWLcfGnqz9OWx6E2+zy7w8rVg7PQ4jt2KijQIuKjphB1Y7dE0QvHUm/70aSXt9+VZUlrRLf9fOV/s4iAdR43IV5wn9SIudS/vZEgJboSDfBbTtCtx0Yp+9g1xITf04rbPlMl7tF5ZudwBUDOmp5T0xS1q7A7GK7/32xN70Hb/DJL6ccf4/5FxKytPcymYWVj1cm++wP7x/z4rTfKEY2/tJcG2VKw+dat6vCrNzn7IGb6DU40OSlJ0aP5vh21WjKDxrNsQGvCOl0CP7OivDXOBa/+HtRVKIPIcEJhJGSuaBauiQlXqMvU+6EpTJ3x3Rmp74sxRQxE+GDgnK8vECUrXjvIlD8rHGPo=

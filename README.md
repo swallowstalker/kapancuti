@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/swallowstalker/kapancuti.svg?branch=master)](https://travis-ci.org/swallowstalker/kapancuti)
 # kapancuti
 
 ## Description
