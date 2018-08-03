@@ -2,11 +2,10 @@ language: python
 python: '3.6'
 services:
 - docker
-install:
-- pip install -r requirements.txt
+install: true
 deploy:
   provider: script
-  script: make build push
+  script: make
   on:
     branch: add-travis
 env:
