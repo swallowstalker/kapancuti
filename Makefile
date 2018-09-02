@@ -1,6 +1,6 @@
 #.PHONY: build push
 
-VERSION = 1.0.5-beta.3
+VERSION = 1.0.5
 IMAGE = kapancuti:$(VERSION)
 
 
