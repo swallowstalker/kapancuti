@@ -46,7 +46,7 @@ def recommendation_templating(holiday, header_active=False):
         holiday_streak_end = holiday['holiday_streak']['end'].astimezone(JAKARTA_TIMEZONE)
 
         holiday_streak_delta = holiday_streak_end - holiday_streak_start
-        total_holiday_plus_leave = format_timedelta(delta=holiday_streak_delta)
+        total_holiday_plus_leave = format_timedelta(delta=holiday_streak_delta) + 1
 
         leave_recommendation_date_list = ''
         for leave in holiday['leave_recommendation']:
