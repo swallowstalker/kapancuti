@@ -1,6 +1,6 @@
 
 from dateutil import tz
-from datetime import datetime
+from datetime import datetime, timedelta
 from babel.dates import format_timedelta
 
 
@@ -13,7 +13,7 @@ HOLIDAY_ONLY_TEMPLATE = "({estimation})\n" \
 
 
 RECOMMENDATION_TEMPLATE = HOLIDAY_ONLY_TEMPLATE + "{recommendations}\n"
-LEAVE_RECOMMENDATION_TEMPLATE = "Rekomendasi cuti ({total_leave} hari cuti, {total_holiday_plus_leave} libur)\n" \
+LEAVE_RECOMMENDATION_TEMPLATE = "Rekomendasi cuti ({total_leave} hari cuti, {total_holiday_plus_leave} hari libur)\n" \
                                 "{leave_recommendation_date_list}" \
                                 "Liburan dari {holiday_plus_leave_start} - {holiday_plus_leave_end}\n"
 
@@ -46,7 +46,7 @@ def recommendation_templating(holiday, header_active=False):
         holiday_streak_end = holiday['holiday_streak']['end'].astimezone(JAKARTA_TIMEZONE)
 
         holiday_streak_delta = holiday_streak_end - holiday_streak_start
-        total_holiday_plus_leave = format_timedelta(delta=holiday_streak_delta) + 1
+        total_holiday_plus_leave = holiday_streak_delta + timedelta(days=1)
 
         leave_recommendation_date_list = ''
         for leave in holiday['leave_recommendation']:
@@ -54,7 +54,7 @@ def recommendation_templating(holiday, header_active=False):
 
         recommendation_submessage = LEAVE_RECOMMENDATION_TEMPLATE.format_map({
             'total_leave': total_leave,
-            'total_holiday_plus_leave': total_holiday_plus_leave,
+            'total_holiday_plus_leave': total_holiday_plus_leave.days,
             'leave_recommendation_date_list': leave_recommendation_date_list,
             'holiday_plus_leave_start': holiday_streak_start.strftime('%A %d %b'),
             'holiday_plus_leave_end': holiday_streak_end.strftime('%A %d %b')
