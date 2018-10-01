@@ -94,17 +94,12 @@ class ResponseHandler:
 
             message += templater.holiday_only_templating(holiday, header_active)
 
-        message += '\nUntuk melihat rekomendasi cuti, silakan panggil /recommendation\n'
+        message += '\nUntuk melihat rekomendasi cuti, silakan pilih "Rekomendasi cuti"\n'
         return message
 
     def help(self):
         return """
 Untuk menjaga keseimbangan kerja dan liburan, bot ini dibuat sebagai referensi untuk pengambilan cuti anda. 
-Ada 3 command, yaitu: 
-
-/year [tahun] 
-/incoming 
-/recommendation
 
 Silakan dicoba.
 Kritik dan saran silakan hubungi @swallowstalker ya.
