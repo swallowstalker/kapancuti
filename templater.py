@@ -25,8 +25,8 @@ def holiday_only_templating(holiday, header_active=False):
         message += MONTH_HEADER_TEMPLATE.format_map({'month_name': foremost_date.strftime('%B %Y')})
 
     message += HOLIDAY_ONLY_TEMPLATE.format_map({
-        'estimation': estimate(holiday['foremost_date']),
-        'holiday_date_string': foremost_date.strftime('%A %d %b'),
+        'estimation': _estimate(holiday['foremost_date']),
+        'holiday_date_string': _holiday_range_string(holiday),
         'description': holiday['description']
     })
 
@@ -63,14 +63,23 @@ def recommendation_templating(holiday, header_active=False):
         recommendation_submessage = 'Tidak ada rekomendasi cuti\n\n'
 
     message += RECOMMENDATION_TEMPLATE.format_map({
-        'estimation': estimate(holiday['foremost_date']),
-        'holiday_date_string': foremost_date.strftime('%A %d %b'),
+        'estimation': _estimate(holiday['foremost_date']),
+        'holiday_date_string': _holiday_range_string(holiday),
         'description': holiday['description'],
         'recommendations': recommendation_submessage
     })
     return message
 
 
-def estimate(target_datetime=datetime.now(tz=JAKARTA_TIMEZONE)):
+def _holiday_range_string(holiday):
+    holiday_start = holiday["date_list"][0].astimezone(JAKARTA_TIMEZONE).strftime('%A %d %b')
+    holiday_end = holiday["date_list"][-1].astimezone(JAKARTA_TIMEZONE).strftime('%A %d %b')
+
+    holiday_date_string = holiday_start
+    holiday_date_string += " - " + holiday_end if holiday_start != holiday_end else ""
+    return holiday_date_string
+
+
+def _estimate(target_datetime=datetime.now(tz=JAKARTA_TIMEZONE)):
     diff = target_datetime - datetime.now(tz=JAKARTA_TIMEZONE)
     return format_timedelta(delta=diff, add_direction=True)
