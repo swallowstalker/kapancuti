@@ -10,6 +10,6 @@ build:
 	docker build -t $(IMAGE) -f Dockerfile .
 
 push:
-	docker login
+	echo "$DOCKER_PASSWORD" | docker login -u swallowstalker --password-stdin
 	docker tag $(IMAGE) swallowstalker/$(IMAGE)
 	docker push swallowstalker/$(IMAGE)
