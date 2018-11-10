@@ -1,16 +1,24 @@
 from telegram.ext import Updater, CommandHandler, CallbackQueryHandler
 from telegram import ParseMode, InlineKeyboardButton, InlineKeyboardMarkup
+from pymongo import MongoClient
 import locale
 import os
 from dotenv import load_dotenv, find_dotenv
-import handler
-import pprint
+from bson.codec_options import CodecOptions
+from handler import handler, templater
+
 
 load_dotenv(find_dotenv())
 
 locale.setlocale(locale.LC_ALL, 'id_ID.UTF-8')
 
-response_handler = handler.ResponseHandler()
+db_client = MongoClient(host=os.getenv('MONGO_HOST', "localhost"),
+                         port=int(os.getenv('MONGO_PORT', 27017)))
+db = db_client.get_database("kapancuti")
+holidays_collection = db.get_collection('holidays', codec_options=CodecOptions(tz_aware=True))
+templater = templater.TemplateGenerator()
+
+response_handler = handler.ResponseHandler(holidays_collection, templater)
 
 
 def help(bot, update):
@@ -93,6 +101,7 @@ def recommendation(bot, query):
 
 
 def about(bot, query):
+    print("masuk about")
     message = response_handler.help()
     bot.send_message(query.message.chat_id,
                      text=message,
@@ -115,11 +124,10 @@ def main():
     updater = Updater(token=os.getenv('BOT_TOKEN', 'suatu-token'))  # dummy bot
     dispatcher = updater.dispatcher
 
-    start_handler = CommandHandler('start', help)
-    dispatcher.add_handler(start_handler)
-
-    help_handler = CommandHandler('help', help)
-    dispatcher.add_handler(help_handler)
+    help_commands = ['start', 'help', 'incoming', 'year', 'recommendation']
+    for help_command in help_commands:
+        help_handler = CommandHandler(help_command, help)
+        dispatcher.add_handler(help_handler)
 
     inline_handler = CallbackQueryHandler(callback_handler)
     dispatcher.add_handler(inline_handler)
