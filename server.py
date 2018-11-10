@@ -3,7 +3,7 @@ from telegram import ParseMode
 import locale
 import os
 from dotenv import load_dotenv, find_dotenv
-import handler
+from handler import handler
 
 load_dotenv(find_dotenv())
 

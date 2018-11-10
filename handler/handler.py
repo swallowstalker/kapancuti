@@ -3,21 +3,18 @@ from pymongo import MongoClient
 import os
 from bson.codec_options import CodecOptions
 from dateutil import tz
-import templater
 
 JAKARTA_TIMEZONE = tz.gettz('Asia/Jakarta')
 
 
 class ResponseHandler:
 
-    def __init__(self):
-        db = MongoClient(host=os.getenv('MONGO_HOST', "localhost"),
-                         port=int(os.getenv('MONGO_PORT', 27017))).get_database("kapancuti")
-        self.holidays_collection = db.get_collection('holidays', codec_options=CodecOptions(tz_aware=True))
+    def __init__(self, holidays_collection, message_templater):
+        self.holidays_collection = holidays_collection
+        self.templater = message_templater
         print(self.holidays_collection.count())
 
     def year(self, year=None):
-
         year = datetime.now().year if year is None else int(year)
 
         yearly_holidays = self.holidays_collection.find({
@@ -38,7 +35,7 @@ class ResponseHandler:
                 header_active = True
                 current_month = foremost_date.month
 
-            message += templater.holiday_only_templating(holiday, header_active)
+            message += self.templater.holiday_only_templating(holiday, header_active)
 
         return message
 
@@ -65,7 +62,7 @@ class ResponseHandler:
                 header_active = True
                 current_month = foremost_date.month
 
-            message += templater.recommendation_templating(holiday, header_active)
+            message += self.templater.recommendation_templating(holiday, header_active)
 
         return message
 
@@ -92,7 +89,7 @@ class ResponseHandler:
                 header_active = True
                 current_month = foremost_date.month
 
-            message += templater.holiday_only_templating(holiday, header_active)
+            message += self.templater.holiday_only_templating(holiday, header_active)
 
         message += '\nUntuk melihat rekomendasi cuti, silakan pilih "Rekomendasi cuti"\n'
         return message
