@@ -1,6 +1,6 @@
 #.PHONY: test build push
 
-VERSION = 2.0.2-beta.1
+VERSION = 2.0.2
 IMAGE = swallowstalker/kapancuti:$(VERSION)
 
 BASE_VERSION = 1.0.0
