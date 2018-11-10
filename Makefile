@@ -16,11 +16,11 @@ build-base:
 
 push-base:
 	echo "$(DOCKER_PASSWORD)" | docker login -u "$(DOCKER_USERNAME)" --password-stdin
-	docker push swallowstalker/$(BASE_IMAGE)
+	docker push $(BASE_IMAGE)
 
 build:
 	docker build -t $(IMAGE) -f Dockerfile .
 
 push:
 	echo "$(DOCKER_PASSWORD)" | docker login -u "$(DOCKER_USERNAME)" --password-stdin
-	docker push swallowstalker/$(IMAGE)
+	docker push $(IMAGE)
