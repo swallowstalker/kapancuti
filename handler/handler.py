@@ -12,7 +12,6 @@ class ResponseHandler:
     def __init__(self, holidays_collection, message_templater):
         self.holidays_collection = holidays_collection
         self.templater = message_templater
-        print(self.holidays_collection.count())
 
     def year(self, year=None):
         year = datetime.now().year if year is None else int(year)

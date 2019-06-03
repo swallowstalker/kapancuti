@@ -1,8 +1,8 @@
 import unittest
 from datetime import datetime
-from babel.dates import format_timedelta
 
 from handler.handler import ResponseHandler
+
 
 class TestYearHandlerWithParam(unittest.TestCase):
 
@@ -34,7 +34,7 @@ class TestYearHandlerWithoutParam(unittest.TestCase):
         handler = ResponseHandler(DummyCollection("incoming"), DummyTemplater())
         result = handler.year()
 
-        expected = "Berikut adalah hari libur untuk tahun 2018\n"
+        expected = "Berikut adalah hari libur untuk tahun {year}\n".format_map({'year': datetime.now().year})
         expected += "Holiday only: Dummy Holiday: 2018-01-04\n"
         self.assertEqual(result, expected, "year not match")
 

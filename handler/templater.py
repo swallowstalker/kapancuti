@@ -1,8 +1,7 @@
-
 from dateutil import tz
 from datetime import datetime, timedelta
-from babel.dates import format_timedelta
 
+import humanize
 
 JAKARTA_TIMEZONE = tz.gettz('Asia/Jakarta')
 
@@ -10,7 +9,6 @@ MONTH_HEADER_TEMPLATE = "----------------\n" \
                         "<b>{month_name}</b>\n"
 HOLIDAY_ONLY_TEMPLATE = "({estimation})\n" \
                         "⚫ {holiday_date_string} (<b>{description}</b>)\n"
-
 
 RECOMMENDATION_TEMPLATE = HOLIDAY_ONLY_TEMPLATE + "{recommendations}\n"
 LEAVE_RECOMMENDATION_TEMPLATE = "Rekomendasi cuti ({total_leave} hari cuti, {total_holiday_plus_leave} hari libur)\n" \
@@ -32,7 +30,6 @@ class TemplateGenerator:
         })
 
         return message
-
 
     def recommendation_templating(self, holiday, header_active=False):
         foremost_date = holiday['foremost_date'].astimezone(JAKARTA_TIMEZONE)
@@ -60,6 +57,7 @@ class TemplateGenerator:
                 'holiday_plus_leave_start': holiday_streak_start.strftime('%A %d %b'),
                 'holiday_plus_leave_end': holiday_streak_end.strftime('%A %d %b')
             })
+
         else:
             recommendation_submessage = 'Tidak ada rekomendasi cuti\n\n'
 
@@ -71,7 +69,6 @@ class TemplateGenerator:
         })
         return message
 
-
     def _holiday_range_string(self, holiday):
         holiday_start = holiday["date_list"][0].astimezone(JAKARTA_TIMEZONE).strftime('%A %d %b')
         holiday_end = holiday["date_list"][-1].astimezone(JAKARTA_TIMEZONE).strftime('%A %d %b')
@@ -80,8 +77,7 @@ class TemplateGenerator:
         holiday_date_string += " - " + holiday_end if holiday_start != holiday_end else ""
         return holiday_date_string
 
-
     def _estimate(self, target_datetime=None):
         target_datetime = datetime.now(tz=JAKARTA_TIMEZONE) if target_datetime is None else target_datetime
         diff = target_datetime - datetime.now(tz=JAKARTA_TIMEZONE)
-        return format_timedelta(delta=diff, add_direction=True)
+        return humanize.naturaltime(diff)
