@@ -1,5 +1,5 @@
 Babel==2.6.0
-certifi==2018.4.16
+certifi==2022.12.7
 future==0.16.0
 mysql-connector-python==8.0.6
 pymongo==3.6.1
